@@ -1,15 +1,14 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
-const { generateAndStoreOTP } = require("../controllers/authController");
 const {
   signup,
   login,
-  addImage,
   addTokenToBlacklist,
   verifyOTP,
+  generateAndStoreOTP,
+  resetPassword,
 } = require("../controllers/authController");
-const authorization = require("../middlewares/authorization");
 const User = require("../models/userModel");
 dotenv.config();
 
@@ -32,6 +31,11 @@ authRouter.post("/signup", async (req, res) => {
     const { name, email, password } = req.body;
 
     let user = await signup(name, email, password);
+
+
+    // Generate and store OTP
+    const otp = await generateAndStoreOTP(email);
+
 
     return res.status(201).send({
       message: "Registration Successful, Please Login",
@@ -162,10 +166,10 @@ authRouter.post("/verify-otp", async (req, res) => {
 //  Reset password route
 authRouter.post("/reset-password", async (req, res) => {
   try {
-    const { userId, otp, newPassword } = req.body;
+    const { email, otp, newPassword } = req.body;
 
     // Verify OTP
-    const isOTPValid = await verifyOTP(userId, otp);
+    const isOTPValid = await verifyOTP(email, otp);
 
     if (!isOTPValid) {
       return res.status(401).send({
@@ -174,12 +178,19 @@ authRouter.post("/reset-password", async (req, res) => {
     }
 
     // Reset password
-    await resetPassword(userId, newPassword);
+    const resetResult = await resetPassword(email, newPassword);
+
+    if (!resetResult.success) {
+      return res.status(404).send({
+        error: resetResult.message,
+      });
+    }
 
     return res.status(200).send({
-      message: "Password reset successful",
+      message: resetResult.message,
     });
   } catch (err) {
+    console.error("Error in reset password:", err);
     return res.status(500).send({
       error: "Something went wrong",
     });

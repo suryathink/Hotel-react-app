@@ -52,14 +52,14 @@ async function verifyOTP(email, enteredOTP) {
       otpRecord.createdAt > new Date(Date.now() - OTP_EXPIRY_DURATION)
     ) {
       //  delete the OTP record from the database after successful verification
-      await OTPModel.deleteOne({ otp: otpRecord.otp }); //  TODO Check What mistake you are doing
+      // await OTPModel.deleteOne({ otp: otpRecord.otp });
       return true;
     } else {
       return false;
     }
   } catch (error) {
     console.error("Error in OTP verification:", error);
-    throw new Error("Error in OTP verification");
+    // throw new Error("Error in OTP verification");
   }
 }
 
@@ -134,6 +134,35 @@ async function addTokenToBlacklist(token) {
   return blacklisted;
 }
 
+async function resetPassword(email, newPassword) {
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      // customized the response based on  frontend needs
+      return {
+        success: false,
+        message: "User not found",
+      };
+    }
+
+    // Update the user's password
+    user.password = newPassword;
+
+    // Save the updated user object
+    await user.save();
+
+    return {
+      success: true,
+      message: "Password reset successful",
+    };
+  } catch (error) {
+    console.error("Error in password reset:", error);
+    throw new Error("Error in password reset");
+  }
+}
+
 module.exports = {
   signup,
   login,
@@ -142,4 +171,5 @@ module.exports = {
   getUserById,
   addTokenToBlacklist,
   generateAndStoreOTP,
+  resetPassword,
 };
