@@ -10,6 +10,10 @@ const {
   resetPassword,
 } = require("../controllers/authController");
 const User = require("../models/userModel");
+const city = require("../models/City");
+const country = require("../models/country");
+const hotelRecord = require("../models/hotelRecord");
+
 dotenv.config();
 
 const authRouter = express.Router();
@@ -25,6 +29,55 @@ authRouter.get("/", async (req, res) => {
     });
   }
 });
+authRouter.post("/addHotelData", async (req, res) => {
+  try {
+    const { hotelName, hotelCity, cityCode, hotelCountry, countryCode } =
+      req.body;
+
+    // Find the last hotel record to generate a unique hotelCode
+    const lastHotel = await hotelRecord.findOne(
+      {},
+      {},
+      { sort: { created_at: -1 } }
+    );
+    const lastNumber = lastHotel
+      ? parseInt(lastHotel.hotelCode.match(/\d+/)[0])
+      : 0;
+    const hotelCode = `EL${lastNumber + 1}`;
+
+    // Creating a new City document and saving it to the database
+    const newCity = await city.create({
+      hotelCode,
+      cityCode,
+      hotelCity,
+    });
+
+    // Creating a new Hotel document and saving it to the database
+    const newHotel = await hotelRecord.create({
+      hotelCode,
+      hotelName,
+      cityCode,
+      countryCode,
+    });
+
+    // Creating a new Country document and saving it to the database
+    const newCountry = await country.create({
+      hotelCode,
+      countryCode,
+      hotelCountry,
+    });
+
+    return res.status(201).send({
+      message: "Data added to DB",
+      data: { newHotel, newCity, newCountry },
+    });
+  } catch (err) {
+    console.error("Error adding hotel data:", err);
+    return res.status(500).send({
+      error: "Error adding hotel data to the database",
+    });
+  }
+});
 
 authRouter.post("/signup", async (req, res) => {
   try {
@@ -32,24 +85,12 @@ authRouter.post("/signup", async (req, res) => {
 
     let user = await signup(name, email, password);
 
-
-    // Generate and store OTP
-    const otp = await generateAndStoreOTP(email);
-
-
     return res.status(201).send({
-      message: "Registration Successful, Please Login",
       data: user,
     });
   } catch (err) {
-    let errorMessage = "Something went wrong";
-
-    if (err.message === "User already exists") {
-      errorMessage = "User already exists,";
-    }
-
     return res.status(400).send({
-      error: errorMessage,
+      error: "Something went wrong",
     });
   }
 });

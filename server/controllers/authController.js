@@ -1,5 +1,4 @@
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 
@@ -10,15 +9,6 @@ const OTPModel = require("../models/otpModel");
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "singhsuryaprakash@gmail.com", // replace with your email
-    pass: process.env.GOOGLE_PASSWORD, // replace with your password
-  },
-});
-
-// authController.js
 
 async function generateAndStoreOTP(email) {
   try {
@@ -79,23 +69,37 @@ function verifyToken(token) {
 }
 
 async function signup(name, email, password) {
-  const alreadyExisting = await User.findOne({
-    email,
-  });
+  try {
+    const alreadyExisting = await User.findOne({ email });
 
-  if (alreadyExisting) {
-    throw new Error("User already exists");
+    if (alreadyExisting) {
+      return {
+        success: false,
+        message: "User already exists",
+      };
+    }
+
+    let user = await User.create({
+      name,
+      email,
+      password: bcrypt.hashSync(password),
+    });
+
+    user = user.toJSON();
+    delete user.password;
+
+    return {
+      success: true,
+      user,
+      message: "User registration successful",
+    };
+  } catch (error) {
+    console.error("Error in signup:", error);
+    return {
+      success: false,
+      message: "Something went wrong during signup",
+    };
   }
-  let user = await User.create({
-    name,
-    email,
-    password: bcrypt.hashSync(password),
-  });
-  user = user.toJSON();
-
-  delete user.password;
-
-  return user;
 }
 
 async function login(email, password) {
@@ -148,8 +152,9 @@ async function resetPassword(email, newPassword) {
     }
 
     // Update the user's password
-    user.password = newPassword;
-
+    // password: bcrypt.hashSync(password),
+    user.password = bcrypt.hashSync(newPassword);
+   console.log("UpdatedUser",user)
     // Save the updated user object
     await user.save();
 
