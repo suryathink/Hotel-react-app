@@ -34,7 +34,6 @@ const hotelSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  // Other fields...
 });
 
 hotelSchema.pre("save", async function (next) {
@@ -53,6 +52,7 @@ hotelSchema.pre("save", async function (next) {
     next();
   } catch (error) {
     next(error);
+    // console.log("error",error)
   }
 });
 //

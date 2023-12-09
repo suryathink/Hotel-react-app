@@ -29,6 +29,65 @@ authRouter.get("/", async (req, res) => {
     });
   }
 });
+
+
+authRouter.get("/getData", async (req, res) => {
+  try {
+    const pipeline = [
+      {
+        $lookup: {
+          from: "cities",
+          localField: "hotelCode",
+          foreignField: "hotelCode",
+          as: "cityData",
+        },
+      },
+      {
+        $lookup: {
+          from: "countries",
+          localField: "hotelCode",
+          foreignField: "hotelCode",
+          as: "countryData",
+        },
+      },
+      {
+        $unwind: {
+          path: "$cityData",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: "$countryData",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          hotelCode: 1,
+          hotelName: 1,
+          hotelCountry: "$countryData.hotelCountry",
+          countryCode: "$countryData.countryCode",
+          hotelCity: "$cityData.hotelCity",
+          cityCode: "$cityData.hotelCode",
+          created_at: 1,
+          __v: 1,
+        },
+      },
+    ];
+
+    const aggregatedData = await hotelRecord.aggregate(pipeline).exec();
+
+    return res.status(201).send(aggregatedData);
+  } catch (err) {
+    return res.status(400).send({
+      error: "Error happened in the backend",
+    });
+  }
+});
+
+
 authRouter.post("/addHotelData", async (req, res) => {
   try {
     const { hotelName, hotelCity, cityCode, hotelCountry, countryCode } =
@@ -123,7 +182,7 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 
-// Modify the existing /forgot-password route
+//  /forgot-password route
 authRouter.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
@@ -178,7 +237,7 @@ authRouter.post("/forgot-password", async (req, res) => {
   }
 });
 
-// Add this route to your authRouter
+
 authRouter.post("/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;

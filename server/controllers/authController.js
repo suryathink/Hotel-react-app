@@ -59,7 +59,7 @@ function generateToken(user) {
     email: user.email,
     name: user.name,
   };
-  console.log(payload);
+  // console.log(payload);
   return jwt.sign(payload, JWT_SECRET);
 }
 
@@ -154,7 +154,7 @@ async function resetPassword(email, newPassword) {
     // Update the user's password
     // password: bcrypt.hashSync(password),
     user.password = bcrypt.hashSync(newPassword);
-   console.log("UpdatedUser",user)
+  //  console.log("UpdatedUser",user)
     // Save the updated user object
     await user.save();
 
