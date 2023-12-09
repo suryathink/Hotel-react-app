@@ -30,7 +30,6 @@ authRouter.get("/", async (req, res) => {
   }
 });
 
-
 authRouter.get("/getData", async (req, res) => {
   try {
     const pipeline = [
@@ -70,7 +69,7 @@ authRouter.get("/getData", async (req, res) => {
           hotelCountry: "$countryData.hotelCountry",
           countryCode: "$countryData.countryCode",
           hotelCity: "$cityData.hotelCity",
-          cityCode: "$cityData.hotelCode",
+          cityCode: "$cityData.cityCode",
           created_at: 1,
           __v: 1,
         },
@@ -86,7 +85,6 @@ authRouter.get("/getData", async (req, res) => {
     });
   }
 });
-
 
 authRouter.post("/addHotelData", async (req, res) => {
   try {
@@ -236,7 +234,6 @@ authRouter.post("/forgot-password", async (req, res) => {
     });
   }
 });
-
 
 authRouter.post("/verify-otp", async (req, res) => {
   try {
