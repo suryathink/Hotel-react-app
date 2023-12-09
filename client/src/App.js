@@ -6,6 +6,7 @@ import SignUp from "./Components/Signup";
 import SignIn from "./Components/Login";
 import Home from "./Components/Home";
 import AddData from "./Components/AddData";
+import ForgotPassword from "./Components/ForgotPassword";
 
 function App() {
   return <div className="App">
@@ -16,6 +17,7 @@ function App() {
      <Route path = "/login" element = {<SignIn/>} />
      <Route path = "/addData" element = {<PrivateComp><AddData/></PrivateComp>} />
      <Route path = "/home" element = {<PrivateComp><Home/></PrivateComp>} />
+     <Route path = "/forgotPassword" element = {<ForgotPassword/>} />
      <Route path = "*" element = {<SignUp/>} />
      </Routes>
   </div>;

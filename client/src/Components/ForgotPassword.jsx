@@ -19,8 +19,7 @@ import { ctx } from "./Context/AuthContext";
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
-  const [passwordState, setPasswordState] = useState("");
+export default function ForgotPassword() {
   const [emailState, setEmailState] = useState("");
   const [emailError, setEmailError] = useState(false);
   const { setIsAuth } = useContext(ctx);
@@ -28,23 +27,14 @@ export default function SignIn() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      setIsAuth(true);
-      navigate("/");
-    }
-  }, []);
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    loginUser(emailState, passwordState);
-    console.log(emailState, passwordState);
+    loginUser(emailState);
+    console.log(emailState);
   };
 
-  async function loginUser(email, password) {
-    const apiUrl = "http://localhost:8080/login";
+  async function loginUser(email) {
+    const apiUrl = "http://localhost:8080/forgot-password";
 
     try {
       setLoading(true);
@@ -55,7 +45,6 @@ export default function SignIn() {
         },
         body: JSON.stringify({
           email: email + "",
-          password: password + "",
         }),
       });
       const userData = await response.json();
@@ -66,13 +55,10 @@ export default function SignIn() {
 
       toast.success(userData.message);
 
-      localStorage.setItem("token", userData.data.data.token);
-      setIsAuth(true);
-      navigate("/");
       return userData;
     } catch (error) {
       console.error("Error logging in:", error);
-      toast.error("Something Went Wrong", error);
+      //   toast.error("Something Went Wrong", error);
     } finally {
       setLoading(false); // Stop loading
     }
@@ -103,7 +89,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Forgot Password
           </Typography>
           <Box
             component="form"
@@ -126,52 +112,26 @@ export default function SignIn() {
               autoComplete="email"
               autoFocus
             />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              onChange={(e) => setPasswordState(e.target.value)}
-              autoComplete="current-password"
-            />
-
-            <p
-              style={{ color: "#0079FF", cursor: "pointer", textAlign: "right",marginBottom:"0px" }}
-              onClick={() => {
-                navigate("/forgotPassword");
-              }}
-              variant="body3"
-            >
-              Forgot Password?
-            </p>
 
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={
-                emailState === "" ||
-                passwordState === "" ||
-                emailError == true ||
-                loading
-              }
+              disabled={emailState === "" || emailError == true || loading}
             >
-              {loading ? <CircularProgress size={20} /> : "Sign In"}
+              {loading ? <CircularProgress size={20} /> : "Submit"}
             </Button>
             <Grid container>
               <Grid item>
                 <p
                   style={{ color: "#0079FF", cursor: "pointer" }}
                   onClick={() => {
-                    navigate("/signup");
+                    navigate("/");
                   }}
                   variant="body2"
                 >
-                  Don't have an account? Sign Up
+                  Navigate to Home Page
                 </p>
               </Grid>
             </Grid>
