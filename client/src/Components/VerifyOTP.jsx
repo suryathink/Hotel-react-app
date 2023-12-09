@@ -39,7 +39,7 @@ export default function VerifyOTP() {
   };
 
   async function verifyOTP(email, otp, newPassword) {
-    const apiUrl = "http://localhost:8080/reset-password";
+    const apiUrl = "https://lazy-lime-mackerel-veil.cyclic.app/reset-password";
 
     try {
       setLoading(true);

@@ -33,7 +33,7 @@ export default function ForgotPassword() {
   };
 
   async function ForgotPass(email) {
-    const apiUrl = "http://localhost:8080/forgot-password";
+    const apiUrl = "https://lazy-lime-mackerel-veil.cyclic.app/forgot-password";
 
     try {
       setLoading(true);

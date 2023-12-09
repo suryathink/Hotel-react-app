@@ -19,7 +19,7 @@ const Home = () => {
   const { setIsAuth } = useContext(ctx);
 
   const handleLogout = async () => {
-    const backendUrl = `http://localhost:8080`;
+    const backendUrl = `https://lazy-lime-mackerel-veil.cyclic.app/`;
 
     try {
       const token = localStorage.getItem("token");
@@ -49,7 +49,7 @@ const Home = () => {
 
   const getData = async () => {
     try {
-      let result = await fetch(`http://localhost:8080/getData`);
+      let result = await fetch(`https://lazy-lime-mackerel-veil.cyclic.app/getData`);
       result = await result.json();
       setData(result);
 

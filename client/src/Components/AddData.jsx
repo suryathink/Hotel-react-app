@@ -15,7 +15,7 @@ function AddData() {
   const addNewUser = async (event) => {
     event.preventDefault();
     try {
-      let response = await fetch("http://localhost:8080/addHotelData", {
+      let response = await fetch("https://lazy-lime-mackerel-veil.cyclic.app/addHotelData", {
         method: "POST",
         body: JSON.stringify({
           hotelName: hotelName,

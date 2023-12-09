@@ -34,7 +34,7 @@ export default function SignUp() {
   const sendDataToServer = async () => {
     try {
       // POST request
-      const response = await fetch("http://localhost:8080/signup", {
+      const response = await fetch("https://lazy-lime-mackerel-veil.cyclic.app/signup", {
         method: "POST",
         body: JSON.stringify({
           name: nameState + "",
