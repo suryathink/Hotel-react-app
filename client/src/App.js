@@ -7,6 +7,7 @@ import SignIn from "./Components/Login";
 import Home from "./Components/Home";
 import AddData from "./Components/AddData";
 import ForgotPassword from "./Components/ForgotPassword";
+import VerifyOTP from "./Components/VerifyOTP";
 
 function App() {
   return <div className="App">
@@ -18,6 +19,7 @@ function App() {
      <Route path = "/addData" element = {<PrivateComp><AddData/></PrivateComp>} />
      <Route path = "/home" element = {<PrivateComp><Home/></PrivateComp>} />
      <Route path = "/forgotPassword" element = {<ForgotPassword/>} />
+     <Route path = "/verifyOTP" element = {<VerifyOTP/>} />
      <Route path = "*" element = {<SignUp/>} />
      </Routes>
   </div>;

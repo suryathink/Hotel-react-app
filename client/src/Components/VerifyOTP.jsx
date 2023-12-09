@@ -19,21 +19,27 @@ import { ctx } from "./Context/AuthContext";
 
 const defaultTheme = createTheme();
 
-export default function ForgotPassword() {
-  const [emailState, setEmailState] = useState("");
+export default function VerifyOTP() {
+  const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
+
+  const [otp, setOtp] = useState("");
+
+  const [newPassword, setNewPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    ForgotPass(emailState);
-    console.log(emailState);
+    verifyOTP(email, otp, newPassword);
+
+    console.log(email, otp, newPassword);
   };
 
-  async function ForgotPass(email) {
-    const apiUrl = "http://localhost:8080/forgot-password";
+  async function verifyOTP(email, otp, newPassword) {
+    const apiUrl = "http://localhost:8080/reset-password";
 
     try {
       setLoading(true);
@@ -44,18 +50,18 @@ export default function ForgotPassword() {
         },
         body: JSON.stringify({
           email: email + "",
+          otp: otp + "",
+          newPassword: newPassword + "",
         }),
       });
       const userData = await response.json();
       if (!userData.ok) {
         toast.error(userData.error);
       }
-      console.log("userData", userData);
 
       toast.success(userData.message);
-
-      navigate("/verifyOTP")
-
+          
+      navigate("/login")
       return userData;
     } catch (error) {
       console.error("Error logging in:", error);
@@ -71,7 +77,7 @@ export default function ForgotPassword() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const isValidEmail = emailRegex?.test(email);
     setEmailError(!isValidEmail);
-    setEmailState(email);
+    setEmail(email);
   };
 
   return (
@@ -90,7 +96,7 @@ export default function ForgotPassword() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Forgot Password
+            Verify OTP
           </Typography>
           <Box
             component="form"
@@ -107,10 +113,38 @@ export default function ForgotPassword() {
               name="email"
               type="email"
               onChange={handleEmailChange}
-              value={emailState}
+              value={email}
               error={emailError}
               helperText={emailError ? "Please provide Email address only" : ""}
               autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="otp"
+              label="Enter OTP Received in Email"
+              name="otp"
+              type="number"
+              onChange={(e) => {
+                setOtp(e.target.value);
+              }}
+              value={otp}
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="password"
+              label="Enter New Password"
+              name="Password"
+              type="password"
+              onChange={(e)=>{
+                setNewPassword(e.target.value)
+              }}
+              value={newPassword}
               autoFocus
             />
 
@@ -119,7 +153,7 @@ export default function ForgotPassword() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={emailState === "" || emailError == true || loading}
+              disabled={email === "" || emailError === true || loading ||otp ==="" || newPassword==="" }
             >
               {loading ? <CircularProgress size={20} /> : "Submit"}
             </Button>
