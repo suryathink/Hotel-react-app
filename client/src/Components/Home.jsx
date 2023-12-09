@@ -99,10 +99,10 @@ const Home = () => {
                 >
                   <TableCell align="center">{i + 1}</TableCell>
                   <TableCell align="center" component="th" scope="row">
-                    {row?.cityCode}
+                    {row?.hotelCode}
                   </TableCell>
                   <TableCell align="center">{row?.hotelName}</TableCell>
-                  <TableCell align="center">{row?.hotelCode}</TableCell>
+                  <TableCell align="center">{row?.hotelCity}</TableCell>
                   <TableCell align="center">{row?.cityCode}</TableCell>
                   <TableCell align="center">{row?.hotelCountry}</TableCell>
                   <TableCell align="center">{row?.countryCode}</TableCell>
