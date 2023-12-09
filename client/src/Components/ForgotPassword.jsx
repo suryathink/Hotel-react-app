@@ -29,7 +29,6 @@ export default function ForgotPassword() {
   const handleSubmit = (event) => {
     event.preventDefault();
     ForgotPass(emailState);
-    console.log(emailState);
   };
 
   async function ForgotPass(email) {

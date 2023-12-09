@@ -47,8 +47,7 @@ export default function SignUp() {
       });
 
       const data = await response.json();
-      // console.log("data.message", data.data.message);
-      // console.log("data", data);
+
       if (!data.ok) {
         toast.error(data.error);
       }

@@ -40,7 +40,6 @@ export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
     loginUser(emailState, passwordState);
-    console.log(emailState, passwordState);
   };
 
   async function loginUser(email, password) {

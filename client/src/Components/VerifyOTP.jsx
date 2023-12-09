@@ -35,7 +35,6 @@ export default function VerifyOTP() {
     event.preventDefault();
     verifyOTP(email, otp, newPassword);
 
-    console.log(email, otp, newPassword);
   };
 
   async function verifyOTP(email, otp, newPassword) {

@@ -53,7 +53,6 @@ const Home = () => {
       result = await result.json();
       setData(result);
 
-      console.log("Result", result);
     } catch (error) {
       console.log(error);
     }
