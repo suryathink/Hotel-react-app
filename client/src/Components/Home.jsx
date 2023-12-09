@@ -102,7 +102,7 @@ const Home = () => {
                     {row?.cityCode}
                   </TableCell>
                   <TableCell align="center">{row?.hotelName}</TableCell>
-                  <TableCell align="center">{row?.hotelCity}</TableCell>
+                  <TableCell align="center">{row?.hotelCode}</TableCell>
                   <TableCell align="center">{row?.cityCode}</TableCell>
                   <TableCell align="center">{row?.hotelCountry}</TableCell>
                   <TableCell align="center">{row?.countryCode}</TableCell>
